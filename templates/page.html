@@ -84,6 +84,7 @@
 
 				// Add the last one vertex to close the top of the dome
 				geom.vertices.push(new THREE.Vector3(0,0,r * dir * (-1.0)));
+				uvs.push( new THREE.Vector2(cu,cv) );
 
 				// Faces (polygon indices)
 
@@ -101,6 +102,15 @@
 						geom.faceVertexUvs[0].push([ uvs[i0], uvs[i2], uvs[i3] ]);
 					}
 				}
+
+                // Close the hole
+				let i2 = num_z_segments * num_xy_segments;
+                for(let t=0; t<num_xy_segments; t++) {
+                    let i0 = (num_z_segments-1) * num_xy_segments + t;
+                    let i1 = (num_z_segments-1) * num_xy_segments + (t+1) % num_xy_segments;
+                    geom.faces.push( new THREE.Face3(i0,i1,i2) );
+                    geom.faceVertexUvs[0].push([ uvs[i0], uvs[i1], uvs[i2] ]);
+                }
 
 				return geom;
 			}
