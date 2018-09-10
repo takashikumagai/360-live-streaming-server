@@ -54,12 +54,13 @@
 
 				let points = [];
 
-				let num_z_segments = 12;
-				let num_xy_segments = 24;
+				let num_z_segments = 16;
+				let num_xy_segments = 32;
 
                 let uvs = [];
-				let ru = 0.25;
-				let rv = 0.5;
+				let margin = 0.05;
+				let ru = 0.25 * (1.0 - margin);
+				let rv = 0.5 * (1.0 - margin);;
 
                 let half_pi = Math.PI / 2.0;
 				for(let s=0; s<num_z_segments; s++) {
