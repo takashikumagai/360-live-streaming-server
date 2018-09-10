@@ -12,7 +12,7 @@
 			}
 		</style>
 	</head>
-	<body onmousedown="onMouseDown(event)" onmousemove="onMouseMove(event)">
+	<body onmousedown="onMouseDown(event)" onmouseup="onMouseUp(event)" onmousemove="onMouseMove(event)">
 
         <!-- we draw mjpg onto this canvas and use the canvas as the texture -->
         <canvas id="2d" width="512" height="512" style="display: none"></canvas>
@@ -23,6 +23,8 @@
 		<script src="/js/three.min.js"></script>
 
 		<script>
+            // We assume mouse does not have  more than 12 buttons and event.button starts with 0 and increase linearly.
+            var mouseDown = [0,0,0,0,0,0,0,0,0,0,0,0];
 
 			var camera, scene, renderer;
 			var meshes = [];
@@ -147,11 +149,17 @@
 			}
 
 			function onMouseDown(e) {
+                mouseDown[e.button] = true;
+
                 // This ensures that prevClientX and prevClientY and initialized
                 // for the first time app is started.
                 prevClientX = e.clientX;
                 prevClientY = e.clientY;
 			}
+
+            function onMouseUp(e) {
+                mouseDown[e.button] = false;
+            }
 
 			function onMouseMove(e) {
                 let dx = e.clientX - prevClientX;
@@ -159,10 +167,12 @@
                 prevClientX = e.clientX;
                 prevClientY = e.clientY;
 
-                for(let i=0; i<2; i++) {
-				    meshes[i].rotation.x += dy * 0.01;
-                    meshes[i].rotation.y += dx * 0.01;
-				}
+                if(mouseDown[0]) {
+                    for(let i=0; i<2; i++) {
+                        meshes[i].rotation.x += dy * 0.008;
+                        meshes[i].rotation.y += dx * 0.008;
+                    }
+                }
 			}
 
 			function animate() {
